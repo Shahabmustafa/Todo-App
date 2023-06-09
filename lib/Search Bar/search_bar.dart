@@ -17,6 +17,10 @@ class _SearchBarState extends State<SearchBar> {
   TextEditingController nameController = TextEditingController();
   final db = FirebaseFirestore.instance.collection('todo');
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -25,34 +29,6 @@ class _SearchBarState extends State<SearchBar> {
       ),
       body: Column(
         children: [
-          StreamBuilder(
-            stream: db.snapshots(),
-            builder: (context,snapshot){
-              if(snapshot.hasData){
-                return Expanded(
-                  child: ListView.builder(
-                    itemCount: snapshot.data!.docs.length,
-                      itemBuilder: (context,index){
-                      var data = snapshot.data!.docs[index];
-                      return Card(
-                        child: ListTile(
-                          title: Text(data['Name']),
-                          trailing: InkWell(
-                            onTap: (){
-                              deleteDocuments();
-                            },
-                            child: Icon(Icons.delete),
-                          ),
-                        ),
-                      );
-                      },
-                  ),
-                );
-              }else{
-                return Center(child: CircularProgressIndicator());
-              }
-            },
-          ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
             child: Row(
@@ -86,21 +62,6 @@ class _SearchBarState extends State<SearchBar> {
         ],
       )
     );
-  }
-  void deleteDocuments() async {
-    try {
-      QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('todo')
-          .where('Name', isNotEqualTo: 'ereierefrerfhreiuhiuh')
-          .get();
-
-      for (QueryDocumentSnapshot documentSnapshot in querySnapshot.docs) {
-        await documentSnapshot.reference.delete();
-      }
-
-      print('Documents deleted successfully.');
-    } catch (e) {
-      print('Error deleting documents: $e');
-    }
   }
 }
 
