@@ -1,8 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:todo_app/Search%20Bar/search_bar.dart';
+import 'package:provider/provider.dart';
+import 'package:todo_app/View/DashBoard/dashboard_screen.dart';
+import 'package:todo_app/View_Model/login_controller.dart';
 
-import 'Auth/login_screen.dart';
+import 'View/login_screen.dart';
 
 void main()async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,16 +18,23 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        appBarTheme: AppBarTheme(
-          color: Colors.black
+    return MultiProvider(
+        providers: [
+          ChangeNotifierProvider(
+              create: (_) => LoginController(),
+          ),
+        ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          appBarTheme: AppBarTheme(
+              color: Colors.black
+          ),
+          primarySwatch: Colors.blue,
         ),
-        primarySwatch: Colors.blue,
+        home: DashBoardPage(),
       ),
-      home: LoginPage(),
     );
   }
 }
