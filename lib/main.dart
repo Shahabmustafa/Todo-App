@@ -4,8 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:todo_app/View/DashBoard/dashboard_screen.dart';
 import 'package:todo_app/View_Model/login_controller.dart';
 
-import 'View/login_screen.dart';
-
 void main()async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();

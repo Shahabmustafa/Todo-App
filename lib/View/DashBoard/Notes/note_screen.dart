@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
+import '../../../Utils/flutter_toast.dart';
 import 'add_note.dart';
 
 class NotePage extends StatefulWidget {
@@ -14,7 +15,7 @@ class NotePage extends StatefulWidget {
 }
 
 class _NotePageState extends State<NotePage> {
-
+  // DocumentReference _documentReference = FirebaseFirestore.instance.collection('Notes').doc(id);
   final List<Map<String, dynamic>> _items = List.generate(
       200,
           (index) => {
@@ -47,23 +48,29 @@ class _NotePageState extends State<NotePage> {
               crossAxisSpacing: 4,
               itemBuilder: (context, index) {
                 // display each item with a card
-                return Card(
-                  // Give each item a random background color
-                  color: Color.fromARGB(
-                      Random().nextInt(256),
-                      Random().nextInt(256),
-                      Random().nextInt(256),
-                      Random().nextInt(256)),
-                  child: SizedBox(
-                    height: _items[index]['height'],
-                    child: Center(
-                      child: Text(
-                        snapshot.data!.docs[index]['Note Text'],
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold
+                return InkWell(
+                  onTap: (){
+                    var data = snapshot.data!.docs[index]['Note Text'];
+                    Note.where('Note Text',isEqualTo: data);
+                  },
+                  child: Card(
+                    // Give each item a random background color
+                    color: Color.fromARGB(
+                        Random().nextInt(256),
+                        Random().nextInt(256),
+                        Random().nextInt(256),
+                        Random().nextInt(256)),
+                    child: SizedBox(
+                      height: _items[index]['height'],
+                      child: Center(
+                        child: Text(
+                          snapshot.data!.docs[index]['Note Text'],
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold
+                          ),
                         ),
                       ),
                     ),

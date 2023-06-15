@@ -54,11 +54,11 @@ class _AddNoteState extends State<AddNote> {
               onTap: ()async{
                 Loading.setLoading(true);
                 try{
-                  await Note.add({
+                  await Note.doc().set({
                     'Note Text' : noteController.text,
                   }).then((value){
                     Loading.setLoading(false);
-                    Utils().FlutterToast(context, value.toString());
+                    Utils().FlutterToast(context, 'Data Add');
                     Navigator.pop(context);
                     noteController.clear();
                   }).onError((error, stackTrace){
