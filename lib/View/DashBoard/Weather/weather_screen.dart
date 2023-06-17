@@ -79,7 +79,7 @@ class _WeatherPageState extends State<WeatherPage> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('${model.main?.temp?.toInt()} °C',style: TextStyle(fontSize: 60.0,fontWeight: FontWeight.normal,color: Colors.white),),
+                          Text('${model.main?.temp?.toInt()} °F',style: TextStyle(fontSize: 60.0,fontWeight: FontWeight.normal,color: Colors.white),),
                         ],
                       ),
                     ],
