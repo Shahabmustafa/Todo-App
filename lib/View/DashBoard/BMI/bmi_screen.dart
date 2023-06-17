@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app/Res/Component/custom_button.dart';
 import 'package:todo_app/Res/Component/text_form_field.dart';
-import 'package:todo_app/View/DashBoard/BMI/BMIController.dart';
 
 class BMIPage extends StatefulWidget {
   const BMIPage({Key? key}) : super(key: key);
@@ -10,18 +10,23 @@ class BMIPage extends StatefulWidget {
 }
 
 class _BMIPageState extends State<BMIPage> {
-  final AgeController = TextEditingController();
   final NameController = TextEditingController();
   final heightController = TextEditingController();
   final weightController = TextEditingController();
-  String dropdownValue = 'Select Your Category';
-  BMIController bmiController = BMIController();
+  double _result = 0;
+  void calculatorBMI(){
+    double height = double.parse(heightController.text) / 100;
+    double weight = double.parse(weightController.text);
+    double hightsquare = height * height;
+    double result = weight / hightsquare;
+    _result = result;
+    setState(() {});
+  }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    bmiController.GetBMI(context);
   }
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,67 +34,97 @@ class _BMIPageState extends State<BMIPage> {
         title: Text('BMI Calculator'),
         centerTitle: true,
       ),
-      body: Column(
-        children: [
-          Textfield(
-          title: 'Enter Your Name',
-          controller: NameController,
-        ),
-          Textfield(
-            title: 'Enter Your AGE',
-            controller: AgeController,
-            keyboard: TextInputType.number,
-          ),
-          Row(
-            children: [
-              Flexible(
-                child: Textfield(
-                  title: 'Enter Your Height',
-                  controller: heightController,
-                  keyboard: TextInputType.number,
-                ),
-              ),
-              Flexible(
-                child: Textfield(
-                  title: 'Enter Your Weight',
-                  controller: weightController,
-                  keyboard: TextInputType.number,
-                ),
-              ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: DropdownButtonFormField(
-              decoration:  InputDecoration(
-                enabledBorder: OutlineInputBorder( //<-- SEE HERE
-                  borderSide: BorderSide(color: Colors.black, width: 2),
-                ),
-                focusedBorder: OutlineInputBorder( //<-- SEE HERE
-                  borderSide: BorderSide(color: Colors.black, width: 2),
-                ),
-                filled: true,
-                fillColor: Colors.grey.shade100,
-              ),
-              dropdownColor: Colors.grey.shade100,
-              value: dropdownValue,
-              onChanged: (String? newValue) {
-                setState(() {
-                  dropdownValue = newValue!;
-                });
-              },
-              items: <String>['Male', 'Female', 'others', 'Select Your Category'].map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(
-                    value,
-                    style: TextStyle(fontSize: 20),
-                  ),
-                );
-              }).toList(),
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Image.asset('images/bmi.png',height: 150.0,width: 150,),
+            SizedBox(
+              height: 50.0,
             ),
-          )
-        ],
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8,vertical: 8),
+              child: Container(
+                width: double.infinity,
+                height: 100,
+                decoration: BoxDecoration(
+                    color: _result <  18.4 ? Colors.yellow :
+                    _result < 25.0 ? Colors.green :
+                    _result < 39.9 ? Colors.orange :
+                    _result > 40.0 ? Colors.red :
+                    Colors.grey,
+                    borderRadius: BorderRadius.circular(8)
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("${NameController.text} Your BMI Result is "
+                        "${
+                        _result <  18.4 ? "UnderWeight" :
+                        _result < 25.0 ? "Normal" :
+                        _result < 39.9 ? 'OverWeight' :
+                        _result > 40.0 ? 'Obese' : ''
+                    }",
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      _result == null ? "Enter Value" : "${_result.toStringAsFixed(2)}",
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 50.0,
+            ),
+            Column(
+              children: [
+                Textfield(
+                  title: 'Enter Your Name',
+                  controller: NameController,
+                ),
+                Row(
+                  children: [
+                    Flexible(
+                      child: Textfield(
+                        title: 'Enter Height in cm',
+                        controller: heightController,
+                        keyboard: TextInputType.number,
+                      ),
+                    ),
+                    Flexible(
+                      child: Textfield(
+                        title: 'Enter Weight in kg',
+                        controller: weightController,
+                        keyboard: TextInputType.number,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 50.0,
+            ),
+            CustomButton(
+              title: 'Check',
+              onTap: calculatorBMI,
+            ),
+          ],
+        ),
       ),
     );
   }
