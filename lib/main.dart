@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:todo_app/View/DashBoard/Favourite/favourite_controller.dart';
 import 'package:todo_app/View/DashBoard/dashboard_screen.dart';
 import 'package:todo_app/View_Model/login_controller.dart';
 
@@ -20,6 +21,9 @@ class MyApp extends StatelessWidget {
         providers: [
           ChangeNotifierProvider(
               create: (_) => LoginController(),
+          ),
+          ChangeNotifierProvider(
+              create: (_) => FavouriteController(),
           ),
         ],
       child: MaterialApp(

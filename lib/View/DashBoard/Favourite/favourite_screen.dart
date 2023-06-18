@@ -1,6 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:todo_app/View/DashBoard/Favourite/add_favourite.dart';
+import 'package:todo_app/View/DashBoard/Favourite/favourite_controller.dart';
+
+import 'favourite_added.dart';
 
 class FavouritePage extends StatefulWidget {
   const FavouritePage({Key? key}) : super(key: key);
@@ -11,6 +15,7 @@ class FavouritePage extends StatefulWidget {
 
 class _FavouritePageState extends State<FavouritePage> {
   final db = FirebaseFirestore.instance.collection('favourite').snapshots();
+  List<int> selectedItem = [];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,52 +23,37 @@ class _FavouritePageState extends State<FavouritePage> {
         title: Text('Favourite'),
         centerTitle: true,
       ),
-      body: StreamBuilder(
-        stream: db,
-        builder: (context,snapshot){
-          if(snapshot.hasData){
-            return ListView.builder(
-                itemCount: snapshot.data?.docs.length,
-                itemBuilder: (context,index){
-                  return Container(
-                    height: 70,
-                    child: Card(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              CircleAvatar(
-                                radius: 25,
-                                backgroundImage: NetworkImage('${snapshot.data?.docs[index]['photoURL']}'),
-                              ),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              Text('${snapshot.data?.docs[index]['Name']}',style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),)
-                            ],
-                          ),
-                          InkWell(
-                            onTap: (){
-
-                            },
-                            child: Icon(Icons.favorite_outline_outlined),
-                          ),
-                        ],
-                      ),
+      body: ListView.builder(
+        itemCount: 50,
+        itemBuilder: (context,index){
+          return Consumer<FavouriteController>(
+              builder: (context,provider,child){
+                return ListTile(
+                  title: Text('Item ${index}'),
+                  trailing: InkWell(
+                    onTap: (){
+                      if(provider.selectedItem.contains(index)){
+                        provider.RemoveItem(index);
+                      }else{
+                        provider.AddItem(index);
+                      }
+                    },
+                    child: Icon(
+                      provider.selectedItem.contains(index) ?
+                      Icons.favorite :
+                      Icons.favorite_outline_outlined,
+                      color: provider.selectedItem.contains(index) ? Colors.red : Colors.black,
                     ),
-                  );
-                }
-            );
-          }else{
-            return Center(child: CircularProgressIndicator());
-          }
-        },
+                  ),
+                );
+              },
+          );
+          },
       ),
       floatingActionButton: FloatingActionButton.extended(
         backgroundColor: Colors.black,
         onPressed: (){
-          Navigator.push(context, MaterialPageRoute(builder: (context) => AddFavourite()));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => FavouriteAdded()));
         },
           label: Text('Add Favourite'),
       ),
