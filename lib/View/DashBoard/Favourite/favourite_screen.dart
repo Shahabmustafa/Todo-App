@@ -15,6 +15,7 @@ class FavouritePage extends StatefulWidget {
 
 class _FavouritePageState extends State<FavouritePage> {
   final db = FirebaseFirestore.instance.collection('favourite').snapshots();
+  final addFav = FirebaseFirestore.instance.collection('addFavourite');
   List<int> selectedItem = [];
   @override
   Widget build(BuildContext context) {
@@ -22,33 +23,83 @@ class _FavouritePageState extends State<FavouritePage> {
       appBar: AppBar(
         title: Text('Favourite'),
         centerTitle: true,
+        actions: [
+          InkWell(
+            onTap: (){
+              Navigator.push(context, MaterialPageRoute(builder: (context) => AddFavourite()));
+            },
+            child: Icon(Icons.add),
+          )
+        ],
       ),
-      body: ListView.builder(
-        itemCount: 50,
-        itemBuilder: (context,index){
-          return Consumer<FavouriteController>(
-              builder: (context,provider,child){
-                return ListTile(
-                  title: Text('Item ${index}'),
-                  trailing: InkWell(
-                    onTap: (){
-                      if(provider.selectedItem.contains(index)){
-                        provider.RemoveItem(index);
-                      }else{
-                        provider.AddItem(index);
+      body: StreamBuilder(
+        stream: db,
+        builder: (context,snapshot){
+          if(snapshot.hasData){
+            return Consumer<FavouriteController>(
+                builder: (context,value,child){
+                  return ListView.builder(
+                      itemCount: snapshot.data?.docs.length,
+                      itemBuilder: (context,index){
+                        var data = snapshot.data?.docs[index];
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          child: Column(
+                            children: [
+                              Container(
+                                width: 300,
+                                height: 300,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20)
+                                ),
+                                child: Image.network('${data!['photoURL']}',fit: BoxFit.cover,),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 10),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Text('${data['Name']}',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold),),
+                                    InkWell(
+                                      onTap: (){
+                                        addFav.add({
+                                          'bool' : value.AddItem(index),
+                                          'Image' : data['photoURL'],
+                                          'Name' : data['Name'],
+                                        });
+                                        if(value.selectedItem.contains(index)){
+                                          value.RemoveItem(index);
+                                        }else{
+                                          value.AddItem(index);
+                                        }
+                                      },
+                                      child: Icon(
+                                        value.selectedItem.contains(index) ?
+                                        Icons.favorite :
+                                        Icons.favorite_outline_outlined,
+                                        color: value.selectedItem.contains(index) ?
+                                        Colors.red :
+                                        Colors.black,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+
+                            ],
+                          ),
+                        );
                       }
-                    },
-                    child: Icon(
-                      provider.selectedItem.contains(index) ?
-                      Icons.favorite :
-                      Icons.favorite_outline_outlined,
-                      color: provider.selectedItem.contains(index) ? Colors.red : Colors.black,
-                    ),
-                  ),
-                );
-              },
-          );
-          },
+                  );
+                }
+            );
+          }
+          else if(snapshot.connectionState == ConnectionState.waiting){
+            return const Center(child: CircularProgressIndicator());
+          }else{
+            return Center(child: Text('Loading....'));
+          }
+        },
       ),
       floatingActionButton: FloatingActionButton.extended(
         backgroundColor: Colors.black,
