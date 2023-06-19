@@ -52,7 +52,20 @@ class _FavouritePageState extends State<FavouritePage> {
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(20)
                                 ),
-                                child: Image.network('${data!['photoURL']}',fit: BoxFit.cover,),
+                                child: ClipRRect(
+                                  child: data!['photoURL']?.toString() == "" ? Image.asset('images/download.png') : Image(
+                                    fit: BoxFit.cover,
+                                    image: NetworkImage(data['photoURL']),
+                                    loadingBuilder: (context,child,loadingProgress){
+                                      if(loadingProgress == null) return child;
+                                      return const Center(
+                                        child: CircularProgressIndicator(
+                                          color: Colors.black,
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
                               ),
                               Padding(
                                 padding: const EdgeInsets.symmetric(vertical: 10),
@@ -62,8 +75,8 @@ class _FavouritePageState extends State<FavouritePage> {
                                     Text('${data['Name']}',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold),),
                                     InkWell(
                                       onTap: (){
-                                        addFav.add({
-                                          'bool' : value.AddItem(index),
+                                        addFav.doc('${index.toInt()}').set({
+                                          'bool' : true,
                                           'Image' : data['photoURL'],
                                           'Name' : data['Name'],
                                         });

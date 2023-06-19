@@ -15,6 +15,8 @@ class FavouriteAdded extends StatefulWidget {
 
 class _FavouriteAddedState extends State<FavouriteAdded> {
   final addFav = FirebaseFirestore.instance.collection('addFavourite').snapshots();
+  final del = FirebaseFirestore.instance.collection('addFavourite');
+
 
   @override
   Widget build(BuildContext context) {
@@ -58,6 +60,7 @@ class _FavouriteAddedState extends State<FavouriteAdded> {
                                     Text('${data?['Name']}',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold),),
                                     InkWell(
                                       onTap: (){
+                                        del.doc("${index.toInt()}").delete();
                                         if(value.selectedItem.contains(index)){
                                           value.RemoveItem(index);
                                         }else{
@@ -65,10 +68,10 @@ class _FavouriteAddedState extends State<FavouriteAdded> {
                                         }
                                       },
                                       child: Icon(
-                                        value.selectedItem.contains(index) ?
+                                        data!['bool'] == true ?
                                         Icons.favorite :
                                         Icons.favorite_outline_outlined,
-                                        color: value.selectedItem.contains(index) ?
+                                        color: data['bool'] == true ?
                                         Colors.red :
                                         Colors.black,
                                       ),
