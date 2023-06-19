@@ -60,11 +60,10 @@ class _FavouriteAddedState extends State<FavouriteAdded> {
                                     Text('${data?['Name']}',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold),),
                                     InkWell(
                                       onTap: (){
-                                        del.doc("${index.toInt()}").delete();
                                         if(value.selectedItem.contains(index)){
                                           value.RemoveItem(index);
+                                          del.doc("${index}").delete();
                                         }else{
-                                          value.AddItem(index);
                                         }
                                       },
                                       child: Icon(

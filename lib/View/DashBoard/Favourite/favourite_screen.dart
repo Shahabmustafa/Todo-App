@@ -75,15 +75,16 @@ class _FavouritePageState extends State<FavouritePage> {
                                     Text('${data['Name']}',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold),),
                                     InkWell(
                                       onTap: (){
-                                        addFav.doc('${index.toInt()}').set({
-                                          'bool' : true,
-                                          'Image' : data['photoURL'],
-                                          'Name' : data['Name'],
-                                        });
                                         if(value.selectedItem.contains(index)){
                                           value.RemoveItem(index);
+                                          addFav.doc('${index}').delete();
                                         }else{
                                           value.AddItem(index);
+                                          addFav.doc('${index}').set({
+                                            'bool' : true,
+                                            'Image' : data['photoURL'],
+                                            'Name' : data['Name'],
+                                          });
                                         }
                                       },
                                       child: Icon(
