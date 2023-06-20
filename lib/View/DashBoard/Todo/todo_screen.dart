@@ -1,8 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:todo_app/Res/Component/custom_button.dart';
 
 class TodoPage extends StatefulWidget {
   const TodoPage({Key? key}) : super(key: key);
@@ -14,23 +11,15 @@ class TodoPage extends StatefulWidget {
 class _TodoPageState extends State<TodoPage> {
   final nameController = TextEditingController();
   final lastController = TextEditingController();
-  @override
+  final db = FirebaseFirestore.instance.collection('todo');
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Todo List'),
         centerTitle: true,
       ),
-      body: StreamBuilder(
-        // stream: todo.snapshots(),
-        builder: (context,snapshot){
-          if(snapshot.hasData){
-            return Text('data');
-          }else{
-            return Center(child: Text('Loading....'),);
-          }
-        },
-      ),
+      // body:
       floatingActionButton: FloatingActionButton.extended(
         backgroundColor: Colors.black,
         onPressed: (){
@@ -66,7 +55,10 @@ class _TodoPageState extends State<TodoPage> {
                 children: [
                   ElevatedButton(
                       onPressed: (){
-
+                        db.doc().set({
+                          'firstName' : nameController.text,
+                          'lastName' : lastController.text,
+                        });
                       },
                       child: Text('Add'),
                   ),
