@@ -24,6 +24,7 @@ class _QuizPageState extends State<QuizPage> {
         centerTitle: true,
       ),
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
@@ -56,11 +57,82 @@ class _QuizPageState extends State<QuizPage> {
                   (e) => button(e)
             ).toList(),
           ),
+          nextButton(),
         ],
       ),
     );
   }
   Widget button(Answer answer){
-    // return
+    bool isSelected = answer == selectAnswer;
+    return CustomButton(
+        colors: isSelected ? Colors.red : Colors.green,
+        title: answer.answerText,
+        onTap: (){
+          if(selectAnswer == null){
+            if(answer.isCorrect){
+              score++;
+            }
+          }
+          setState(() {
+            selectAnswer = answer;
+          });
+        }
+    );
+  }
+  Widget nextButton(){
+    bool isLastQuestion = false;
+    if(currentQuestionIndex == questionList.length -1){
+      isLastQuestion = true;
+    }
+    return InkWell(
+      onTap: (){
+        if(isLastQuestion){
+          showDialog(
+              context: context,
+              builder: (_) => DilogAlert(),
+          );
+        }else{
+          setState(() {
+            selectAnswer = null;
+            currentQuestionIndex++;
+          });
+        }
+      },
+      child: Container(
+        width: 250,
+        height: 60,
+        decoration: BoxDecoration(
+          color: Colors.blue,
+          borderRadius: BorderRadius.circular(50)
+        ),
+        child: Center(child: Text(
+          isLastQuestion ? 'Submit' : "Next",
+          style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),)),
+      ),
+    );
+
+  }
+  DilogAlert(){
+    bool isPressed = false;
+    if(score >= questionList.length + 0.6){
+      isPressed = true;
+    }
+    String title  = isPressed ? "Passed" : "Faild";
+    return AlertDialog(
+      title: Text(title + "Your Score is $score"),
+      content: ElevatedButton(
+        child: Text('Restart'),
+        onPressed: (){
+          setState(() {
+            Navigator.pop(context);
+            setState(() {
+              currentQuestionIndex = 0;
+              score = 0;
+              selectAnswer = null;
+            });
+          });
+        },
+      ),
+    );
   }
 }
