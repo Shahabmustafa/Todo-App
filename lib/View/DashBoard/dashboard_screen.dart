@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/View/DashBoard/BMI/bmi_screen.dart';
-import 'package:todo_app/View/DashBoard/Calculator/calculator_screen.dart';
 import 'package:todo_app/View/DashBoard/Favourite/favourite_screen.dart';
 import 'package:todo_app/View/DashBoard/Notes/note_screen.dart';
+import 'package:todo_app/View/DashBoard/Quiz/quiz_screen.dart';
 import 'package:todo_app/View/DashBoard/Weather/weather_screen.dart';
-
 import 'Todo/todo_screen.dart';
 
 class DashBoardPage extends StatefulWidget {
@@ -17,7 +16,7 @@ class DashBoardPage extends StatefulWidget {
 class _DashBoardPageState extends State<DashBoardPage> {
   List<String> title = [
     "Todo",
-    "Calculator",
+    "Quiz",
     "BMI Calculator",
     "Weather",
     "Notes",
@@ -25,7 +24,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
   ];
   List<String> ImageUrl = [
     "images/checklist.png",
-    "images/calculator.png",
+    "images/quiz.png",
     "images/bmi.png",
     "images/cloudy.png",
     "images/post-it.png",
@@ -34,7 +33,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
 
   List<dynamic> Navigations = [
     const TodoPage(),
-    const CalculatorPage(),
+    const QuizPage(),
     const BMIPage(),
     const WeatherPage(),
     const NotePage(),

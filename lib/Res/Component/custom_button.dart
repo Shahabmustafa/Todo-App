@@ -3,10 +3,11 @@
 import 'package:flutter/material.dart';
 
 class CustomButton extends StatelessWidget {
-  CustomButton({Key? key,required this.title,required this.onTap,this.loading = false}) : super(key: key);
+  CustomButton({Key? key,required this.title,required this.onTap,this.loading = false,this.colors}) : super(key: key);
   String title;
   VoidCallback onTap;
   bool loading;
+  Color? colors;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -16,7 +17,7 @@ class CustomButton extends StatelessWidget {
         child: Container(
           width: double.infinity,
           decoration: BoxDecoration(
-            color: Colors.green,
+            color: colors,
             borderRadius: BorderRadius.circular(10),
           ),
           height: 60,
