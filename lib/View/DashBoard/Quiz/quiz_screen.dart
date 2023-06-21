@@ -27,6 +27,15 @@ class _QuizPageState extends State<QuizPage> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text("Question ${currentQuestionIndex+1}/${questionList.length.toString()}",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
+              ],
+            ),
+          ),
+          Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
             child: Container(
               height: 150,
@@ -65,7 +74,7 @@ class _QuizPageState extends State<QuizPage> {
   Widget button(Answer answer){
     bool isSelected = answer == selectAnswer;
     return CustomButton(
-        colors: isSelected ? Colors.red : Colors.green,
+        colors: isSelected ? Colors.blue : Colors.black,
         title: answer.answerText,
         onTap: (){
           if(selectAnswer == null){
@@ -119,7 +128,10 @@ class _QuizPageState extends State<QuizPage> {
     }
     String title  = isPressed ? "Passed" : "Faild";
     return AlertDialog(
-      title: Text(title + "Your Score is $score"),
+      title: Text(title + " Your Score is $score",
+      style: TextStyle(
+        color: isPressed ? Colors.red : Colors.green
+      ),),
       content: ElevatedButton(
         child: Text('Restart'),
         onPressed: (){
